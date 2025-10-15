@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Meetings App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="app-shell">
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Open menu">
+        <span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
+
+      <aside id="sidebar" class="sidebar" aria-hidden="true">
+        <div class="sidebar-inner">
+          <button id="sidebarClose" class="sidebar-close" aria-label="Close menu">×</button>
+          <nav class="sidebar-nav">
+            <button class="nav-btn" data-href="{{ url_for('index') }}">Home</button>
+            <button class="nav-btn" data-href="{{ url_for('list_meetings') }}">Meetings</button>
+          </nav>
+        </div>
+      </aside>
+
+      <div id="mainContent" class="main-content">
+        {% block content %}{% endblock %}
+      </div>
+
+    </div>
+
+    <script>
+      const toggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      const closeBtn = document.getElementById('sidebarClose');
+      const mainContent = document.getElementById('mainContent');
+      let previousFocus = null;
+
+      function focusableElements(container){
+        return Array.from(container.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'))
+          .filter(el => !el.hasAttribute('disabled'));
+      }
+
+      function openSidebar(){
+        previousFocus = document.activeElement;
+        sidebar.classList.add('open');
+        toggle.classList.add('open');
+        sidebar.setAttribute('aria-hidden','false');
+        // focus first focusable element inside sidebar
+        const foc = focusableElements(sidebar)[0];
+        if(foc) foc.focus();
+        // add keydown trap
+        document.addEventListener('keydown', trapFocus);
+      }
+
+      function closeSidebar(){
+        sidebar.classList.remove('open');
+        toggle.classList.remove('open');
+        sidebar.setAttribute('aria-hidden','true');
+        // restore focus
+        if(previousFocus) previousFocus.focus();
+        document.removeEventListener('keydown', trapFocus);
+      }
+
+      function trapFocus(e){
+        if(e.key === 'Escape'){
+          closeSidebar();
+          return;
+        }
+        if(e.key === 'Tab'){
+          const nodes = focusableElements(sidebar);
+          if(nodes.length === 0) return;
+          const first = nodes[0];
+          const last = nodes[nodes.length-1];
+          if(e.shiftKey && document.activeElement === first){
+            e.preventDefault(); last.focus();
+          } else if(!e.shiftKey && document.activeElement === last){
+            e.preventDefault(); first.focus();
+          }
+        }
+      }
+
+      toggle.addEventListener('click', ()=>{
+        if(sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
+      });
+      closeBtn.addEventListener('click', closeSidebar);
+
+      // click delegation for nav buttons
+      document.querySelector('.sidebar-nav').addEventListener('click', (e)=>{
+        const btn = e.target.closest('.nav-btn');
+        if(btn && btn.dataset.href){
+          window.location.href = btn.dataset.href;
+        }
+      });
+
+      // close when clicking outside (on main content)
+      mainContent.addEventListener('click', ()=>{ if(sidebar.classList.contains('open')) closeSidebar(); });
+    </script>
+  </body>
+</html>

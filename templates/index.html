@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload meeting{% endblock %}
+
+{% block content %}
+  <header>
+    <h2>Upload meeting audio</h2>
+    <p class="lead">Upload an audio file and get a Gemini-powered transcript on the same page.</p>
+  </header>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash">
+        {% for msg in messages %}
+          <div class="flash-item">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <section class="card upload-card">
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+      <label class="file-label">
+        <input id="audioInput" type="file" name="audio" accept="audio/*" required>
+        <span id="fileName">Select audio file</span>
+      </label>
+      <label class="attendees-label">
+        <input type="text" name="attendees" placeholder="Comma-separated attendee names (optional)">
+      </label>
+      <div class="actions">
+        <button class="btn" type="submit">Upload & Transcribe</button>
+      </div>
+    </form>
+  </section>
+
+  {% if transcript %}
+  <section class="card result-card">
+    <h2>Transcript</h2>
+
+    {% if summary %}
+      <div class="summary">
+        <h3>Quick summary</h3>
+        <pre class="summary-text">{{ summary }}</pre>
+      </div>
+    {% endif %}
+
+    <details open>
+      <summary class="transcript-label">Full transcript</summary>
+      <pre class="transcript">{{ transcript }}</pre>
+    </details>
+  </section>
+  {% endif %}
+
+  <script>
+    const input = document.getElementById('audioInput');
+    const fileName = document.getElementById('fileName');
+    input.addEventListener('change', ()=>{
+      const f = input.files[0];
+      if(f){
+        fileName.textContent = f.name;
+      } else {
+        fileName.textContent = 'Select audio file';
+      }
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Saved meetings{% endblock %}
+
+{% block content %}
+  <header>
+    <h2>Saved Meetings</h2>
+    <p class="lead"><a href="{{ url_for('index') }}">Upload new meeting</a></p>
+  </header>
+
+  <section class="card">
+    {% if meetings %}
+      <ul class="meetings-list">
+        {% for m in meetings %}
+          <li><a href="{{ url_for('view_meeting', meeting_id=m.id) }}">#{{ m.id }} - {{ m.filename }}</a> — {{ m.attendees }} — {{ m.created_at }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No meetings saved yet.</p>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,0 +1,42 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+*.pyc
+
+# Virtual environments
+venv/
+ENV/
+env/
+Lib/
+Scripts/
+Include/
+pyvenv.cfg
+
+# Pipenv
+Pipfile
+Pipfile.lock
+
+# VS Code
+.vscode/
+
+# Editor/OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# Uploads and DB
+uploads/
+meetings.db
+
+# Byte-compiled / distribution
+build/
+dist/
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
