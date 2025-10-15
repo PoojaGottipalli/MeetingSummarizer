@@ -1,30 +1,28 @@
-# Gemini Audio Transcription (Flask)
+# Meeting Summarizer
 
-Simple Flask app that uploads an audio file, sends it to Google Gemini (GenAI) using the Python SDK, and returns a transcript on the same page.
+A web application to automatically transcribe and summarize meeting audio.  
+It extracts key points, attendees, and action items from uploaded meeting recordings.
 
-Requirements
-- Python 3.9+
-- A Google GenAI API key set up according to the `google-genai` package instructions.
+---
 
-Setup (PowerShell)
+## Demo
 
-```powershell
-# create and activate venv
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+[https://drive.google.com/file/d/13jYPbJchbUy4RMazOCYbv4bLAOwTadHb/view?usp=sharing]
 
-# install deps
-pip install -r requirements.txt
+---
 
-# set env vars
-$env:GOOGLE_API_KEY = 'API'
-# optional flask secret
-$env:FLASK_SECRET = 'a-secret-for-flash'
+## Features
 
-# run
-python app.py
-```
+- Upload audio files in formats: `mp3`, `wav`, `m4a`, `flac`, `ogg`.
+- Automatic transcription using Google Gemini / GenAI.
+- Generates structured summaries in plain text.
+- Extracts participants mentioned in the meeting.
+- Identifies action items and assignments.
+- Stores meeting records in a local SQLite database.
+- Download transcripts and action items as `.txt` files.
+- Simple web interface built with Flask.
 
-Notes
-- The app uses `google.genai.Client()` as shown in the example. Make sure your environment is configured so the client can authenticate (API key or ADC depending on the genai SDK).
-- If you need streaming or partial results, the SDK and model may provide different endpoints—this example uses a simple generate_content call.
+---
+
+
+
